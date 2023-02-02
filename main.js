@@ -154,13 +154,65 @@ function draw(arr) {
     return res;
 }
 
-let colCount = 3;
+let colCount = 5;
 
-let layoutMap = place(colCount, 13);
+let layoutMap = place(colCount, 40);
 
 document.querySelector("#app").style = `width:${colCount * 100}px`;
 document.querySelector("#app").innerHTML = draw(layoutMap);
 
 document.querySelectorAll(".item").forEach((elem, index) => {
     elem.innerHTML = index + 1;
+});
+
+document.querySelector("#lgx").addEventListener("click", () => {
+    let colCount = 5;
+
+    let layoutMap = place(colCount, 40);
+
+    document.querySelector("#app").style = `width:${colCount * 100}px`;
+    document.querySelector("#app").innerHTML = draw(layoutMap);
+
+    document.querySelectorAll(".item").forEach((elem, index) => {
+        elem.innerHTML = index + 1;
+    });
+});
+
+document.querySelector("#lg").addEventListener("click", () => {
+    let colCount = 4;
+
+    let layoutMap = place(colCount, 40);
+
+    document.querySelector("#app").style = `width:${colCount * 100}px`;
+    document.querySelector("#app").innerHTML = draw(layoutMap);
+
+    document.querySelectorAll(".item").forEach((elem, index) => {
+        elem.innerHTML = index + 1;
+    });
+});
+
+document.querySelector("#md").addEventListener("click", () => {
+    let colCount = 3;
+
+    let layoutMap = place(colCount, 40);
+
+    document.querySelector("#app").style = `width:${colCount * 100}px`;
+    document.querySelector("#app").innerHTML = draw(layoutMap);
+
+    document.querySelectorAll(".item").forEach((elem, index) => {
+        elem.innerHTML = index + 1;
+    });
+});
+
+document.querySelector("#sm").addEventListener("click", () => {
+    let colCount = 2;
+
+    let layoutMap = place(colCount, 40);
+
+    document.querySelector("#app").style = `width:${colCount * 100}px`;
+    document.querySelector("#app").innerHTML = draw(layoutMap);
+
+    document.querySelectorAll(".item").forEach((elem, index) => {
+        elem.innerHTML = index + 1;
+    });
 });
