@@ -17,7 +17,7 @@ function place(cols, items) {
                 let randBlock = blocks[Math.floor(Math.random() * blocks.length)];
 
                 if (items < 2) {
-                    randBlock = "d";
+                    randBlock = "h";
                 }
 
                 if (["h", "d"].includes(randBlock)) {
@@ -38,9 +38,6 @@ function place(cols, items) {
                     if (blocksPerRow < 2) {
                         randBlock = "v";
                     }
-                    if (blocksPerRow === 2) {
-                        randBlock = "s";
-                    }
                     if (randBlock === "s") {
                         console.log("two", 2, randBlock, iterationId);
 
@@ -54,9 +51,7 @@ function place(cols, items) {
                     items = items - 1;
                 }
 
-                //if (countItmes <= 40) {
                 res.push(randBlock);
-                //}
 
                 iterationId = iterationId + 1;
             }
@@ -106,6 +101,64 @@ function place(cols, items) {
     //     .forEach((i) => {
     //         console.log(i, "zaza");
     //     });
+    return res;
 }
 
-place(5, 40);
+function drawS(data) {
+    return `<div class="s">
+        <div class="item"></div>
+    </div>`;
+}
+
+function drawH(data) {
+    return `<div class="h">
+        <div class="item"></div>
+        <div class="item"></div>
+    </div>`;
+}
+
+function drawV(data) {
+    return `<div class="v">
+        <div class="item"></div>
+    </div>`;
+}
+
+function drawD(data) {
+    return `<div class="d">
+        <div class="item"></div>
+        <div class="item"></div>
+    </div>`;
+}
+
+function draw(arr) {
+    let res = "";
+    arr.forEach((elem) => {
+        switch (elem) {
+            case "s":
+                res += drawS();
+                break;
+            case "h":
+                res += drawH();
+                break;
+            case "v":
+                res += drawV();
+                break;
+            default:
+                res += drawD();
+                break;
+        }
+    });
+
+    return res;
+}
+
+let colCount = 3;
+
+let layoutMap = place(colCount, 13);
+
+document.querySelector("#app").style = `width:${colCount * 100}px`;
+document.querySelector("#app").innerHTML = draw(layoutMap);
+
+document.querySelectorAll(".item").forEach((elem, index) => {
+    elem.innerHTML = index + 1;
+});
