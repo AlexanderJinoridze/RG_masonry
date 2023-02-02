@@ -10,7 +10,7 @@ function place(cols, items) {
     while (items) {
         let blocksPerRow = cols;
 
-        console.log("---------------");
+        console.log("---------->->->->--");
 
         if (items > 0) {
             while (blocksPerRow) {
@@ -24,6 +24,7 @@ function place(cols, items) {
                     if (blocksPerRow < 2) {
                         randBlock = "d";
                     }
+
                     if (randBlock === "h") {
                         console.log("two", 2, randBlock, iterationId);
                         blocksPerRow = blocksPerRow - 2;
@@ -67,7 +68,8 @@ function place(cols, items) {
         .forEach((_, i) => {
             var sos = Math.random() < 0.5;
             console.log(i, sos);
-            if (sos) {
+
+            if (i <= initialItems && sos) {
                 console.log(res);
                 res.splice(res.indexOf("h"), 1, "s");
                 console.log(res);
