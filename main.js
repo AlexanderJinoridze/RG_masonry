@@ -1,218 +1,281 @@
 import "./style.css";
 
-function place(cols, items) {
-    const blocks = ["s", "h", "v", "d"];
-    let iterationId = 0;
-    let countItmes = 0;
-    let initialItems = items;
-    const res = [];
+function getRandomNumber(from = 0, to = 1) {
+    return Math.floor(Math.random() * (to - from)) + from;
+}
 
-    while (items) {
-        let blocksPerRow = cols;
+function getRandomElementOfArray(array) {
+    return array[getRandomNumber(0, array.length)];
+}
 
-        console.log("---------->->->->--");
+function loop(times, callback) {
+    Array(times)
+        .fill("")
+        .forEach(function (_, i) {
+            callback.call(this, i);
+        });
+}
 
-        if (items > 0) {
-            while (blocksPerRow) {
-                let randBlock = blocks[Math.floor(Math.random() * blocks.length)];
+function countPlacedItems(resultMap) {
+    let count = 0;
 
-                if (items < 2) {
-                    randBlock = "h";
-                }
+    resultMap.forEach((gridBlock) => {
+        let itemsPlaced = null;
 
-                if (["h", "d"].includes(randBlock)) {
-                    if (blocksPerRow < 2) {
-                        randBlock = "d";
-                    }
-
-                    if (randBlock === "h") {
-                        console.log("two", 2, randBlock, iterationId);
-                        blocksPerRow = blocksPerRow - 2;
-                    } else {
-                        console.log("one", 1, randBlock, iterationId);
-                        blocksPerRow = blocksPerRow - 1;
-                    }
-
-                    countItmes = countItmes + 2;
-                    items = items - 2;
-                } else {
-                    if (blocksPerRow < 2) {
-                        randBlock = "v";
-                    }
-                    if (randBlock === "s") {
-                        console.log("two", 2, randBlock, iterationId);
-
-                        blocksPerRow = blocksPerRow - 2;
-                    } else {
-                        console.log("one", 1, randBlock, iterationId);
-                        blocksPerRow = blocksPerRow - 1;
-                    }
-
-                    countItmes = countItmes + 1;
-                    items = items - 1;
-                }
-
-                res.push(randBlock);
-
-                iterationId = iterationId + 1;
-            }
-        } else {
-            items = false;
+        if (["horizontals", "double"].includes(gridBlock)) {
+            itemsPlaced = 2;
+        } else if (["square", "vertical"].includes(gridBlock)) {
+            itemsPlaced = 1;
         }
+
+        count = count + itemsPlaced;
+        console.log(gridBlock, itemsPlaced, count);
+    });
+
+    return count;
+}
+
+function generateRGGridMap(columns, totalItems) {
+    const blockTypes = ["square", "horizontals", "vertical", "double"];
+    const resultMap = [];
+    let itemsAbleToSet = 0;
+    let itemsLeft = totalItems;
+    let leftover = null;
+
+    let perline = [];
+
+    var i = 0;
+
+    while (itemsLeft > 0) {
+        if (itemsLeft <= 0) {
+            continue;
+        }
+
+        let freeSpaceOfLine = columns;
+
+        console.log("--------------------");
+
+        let perlineRow = [];
+        while (freeSpaceOfLine > 0) {
+            if (freeSpaceOfLine <= 0) {
+                continue;
+            }
+
+            let selectedBlockType = getRandomElementOfArray(blockTypes);
+            let spaceTaken = 0;
+
+            if (itemsLeft < 2) {
+                selectedBlockType = "vertical";
+            }
+
+            if (["horizontals", "double"].includes(selectedBlockType)) {
+                if (freeSpaceOfLine < 2) {
+                    selectedBlockType = "double";
+                }
+
+                if (selectedBlockType === "horizontals") {
+                    spaceTaken = 2;
+                } else if (selectedBlockType === "double") {
+                    spaceTaken = 1;
+                }
+
+                console.log(spaceTaken, selectedBlockType, i);
+
+                freeSpaceOfLine = freeSpaceOfLine - spaceTaken;
+
+                if (freeSpaceOfLine < 0) {
+                    continue;
+                }
+
+                itemsAbleToSet = itemsAbleToSet + 2;
+                itemsLeft = itemsLeft - 2;
+            } else if (["square", "vertical"].includes(selectedBlockType)) {
+                if (freeSpaceOfLine < 2) {
+                    selectedBlockType = "vertical";
+                }
+
+                if (selectedBlockType === "square") {
+                    spaceTaken = 2;
+                } else if (selectedBlockType === "vertical") {
+                    spaceTaken = 1;
+                }
+
+                console.log(spaceTaken, selectedBlockType, i);
+
+                freeSpaceOfLine = freeSpaceOfLine - spaceTaken;
+
+                if (freeSpaceOfLine < 0) {
+                    continue;
+                }
+
+                itemsAbleToSet = itemsAbleToSet + 1;
+                itemsLeft = itemsLeft - 1;
+            }
+
+            resultMap.push(selectedBlockType);
+            i = i + 1;
+
+            perlineRow.push(selectedBlockType);
+        }
+        perline.push(perlineRow);
     }
 
-    console.log("count of iters", countItmes - initialItems);
+    console.log("====================");
 
-    Array(countItmes - initialItems)
-        .fill("")
-        .forEach((_, i) => {
-            var sos = Math.random() < 0.5;
-            console.log(i, sos);
+    // let count = countPlacedItems(resultMap);
+    // console.log(count - totalItems, count);
 
-            if (i <= initialItems && sos) {
-                console.log(res);
-                res.splice(res.indexOf("h"), 1, "s");
-                console.log(res);
-            } else {
-                console.log(res);
-                res.splice(res.indexOf("d"), 1, "v");
-                console.log(res);
-            }
-        });
+    leftover = itemsAbleToSet - totalItems;
+    // let leftorver2 = count - totalItems;
+    let zaza = "";
 
-    let zaza = 0;
+    // console.log(leftorver2);
 
-    console.log(countItmes - initialItems, countItmes);
+    // if (leftorver2) {
+    perline.forEach((perlineRow) => {
+        // console.log(perlineRow, perlineRow.toString());
+        if (leftover && perlineRow.toString().includes("vertical,vertical")) {
+            perlineRow = perlineRow.toString().replace("vertical,vertical", "square");
 
-    // console.log(res, countItmes);
-    res.forEach((resItem) => {
-        // console.log(resItem, ["h", "d"].includes(resItem));
-        if (["h", "d"].includes(resItem)) {
-            zaza = zaza + 2;
-            console.log(resItem, 2, zaza);
-        } else if (["s", "v"].includes(resItem)) {
-            zaza = zaza + 1;
-            console.log(resItem, 1, zaza);
+            leftover = leftover - 1;
         }
+
+        zaza = zaza + "," + perlineRow;
     });
 
-    console.log(zaza - initialItems, zaza);
+    let soso = zaza.substring(1).split(",");
 
-    // Array(items)
-    //     .fill("")
-    //     .forEach((i) => {
-    //         console.log(i, "zaza");
-    //     });
-    return res;
+    console.log(soso);
+    let count2 = countPlacedItems(soso);
+    console.log(count2 - totalItems, count2);
+    // }
+
+    // leftover = itemsAbleToSet - totalItems;
+
+    // console.log(perline, leftover, itemsAbleToSet);
+
+    // loop(leftover, (i) => {
+    //     let halfChance = Math.random() < 0.5;
+
+    //     if (halfChance) {
+    //         resultMap.splice(resultMap.indexOf("horizontals"), 1, "square");
+    //     } else {
+    //         resultMap.splice(resultMap.indexOf("double"), 1, "vertical");
+    //     }
+    // });
+
+    return resultMap;
 }
 
-function drawS(data) {
-    return `<div class="s">
-        <div class="item"></div>
-    </div>`;
-}
+generateRGGridMap(5, 13);
 
-function drawH(data) {
-    return `<div class="h">
-        <div class="item"></div>
-        <div class="item"></div>
-    </div>`;
-}
+// function drawS(data) {
+//     return `<div class="s">
+//         <div class="item"></div>
+//     </div>`;
+// }
 
-function drawV(data) {
-    return `<div class="v">
-        <div class="item"></div>
-    </div>`;
-}
+// function drawH(data) {
+//     return `<div class="h">
+//         <div class="item"></div>
+//         <div class="item"></div>
+//     </div>`;
+// }
 
-function drawD(data) {
-    return `<div class="d">
-        <div class="item"></div>
-        <div class="item"></div>
-    </div>`;
-}
+// function drawV(data) {
+//     return `<div class="v">
+//         <div class="item"></div>
+//     </div>`;
+// }
 
-function draw(arr) {
-    let res = "";
-    arr.forEach((elem) => {
-        switch (elem) {
-            case "s":
-                res += drawS();
-                break;
-            case "h":
-                res += drawH();
-                break;
-            case "v":
-                res += drawV();
-                break;
-            default:
-                res += drawD();
-                break;
-        }
-    });
+// function drawD(data) {
+//     return `<div class="d">
+//         <div class="item"></div>
+//         <div class="item"></div>
+//     </div>`;
+// }
 
-    return res;
-}
+// function draw(arr) {
+//     let res = "";
+//     arr.forEach((elem) => {
+//         switch (elem) {
+//             case "s":
+//                 res += drawS();
+//                 break;
+//             case "h":
+//                 res += drawH();
+//                 break;
+//             case "v":
+//                 res += drawV();
+//                 break;
+//             default:
+//                 res += drawD();
+//                 break;
+//         }
+//     });
 
-let colCount = 5;
+//     return res;
+// }
 
-let layoutMap = place(colCount, 40);
+// let colCount = 5;
 
-document.querySelector("#app").style = `width:${colCount * 100}px`;
-document.querySelector("#app").innerHTML = draw(layoutMap);
+// let layoutMap = place(colCount, 4);
 
-document.querySelectorAll(".item").forEach((elem, index) => {
-    elem.innerHTML = index + 1;
-});
+// document.querySelector("#app").style = `width:${colCount * 100}px`;
+// document.querySelector("#app").innerHTML = draw(layoutMap);
 
-document.querySelector("#lgx").addEventListener("click", () => {
-    let colCount = 5;
+// document.querySelectorAll(".item").forEach((elem, index) => {
+//     elem.innerHTML = index + 1;
+// });
 
-    let layoutMap = place(colCount, 40);
+// document.querySelector("#lgx").addEventListener("click", () => {
+//     let colCount = 5;
 
-    document.querySelector("#app").style = `width:${colCount * 100}px`;
-    document.querySelector("#app").innerHTML = draw(layoutMap);
+//     let layoutMap = place(colCount, 40);
 
-    document.querySelectorAll(".item").forEach((elem, index) => {
-        elem.innerHTML = index + 1;
-    });
-});
+//     document.querySelector("#app").style = `width:${colCount * 100}px`;
+//     document.querySelector("#app").innerHTML = draw(layoutMap);
 
-document.querySelector("#lg").addEventListener("click", () => {
-    let colCount = 4;
+//     document.querySelectorAll(".item").forEach((elem, index) => {
+//         elem.innerHTML = index + 1;
+//     });
+// });
 
-    let layoutMap = place(colCount, 40);
+// document.querySelector("#lg").addEventListener("click", () => {
+//     let colCount = 4;
 
-    document.querySelector("#app").style = `width:${colCount * 100}px`;
-    document.querySelector("#app").innerHTML = draw(layoutMap);
+//     let layoutMap = place(colCount, 40);
 
-    document.querySelectorAll(".item").forEach((elem, index) => {
-        elem.innerHTML = index + 1;
-    });
-});
+//     document.querySelector("#app").style = `width:${colCount * 100}px`;
+//     document.querySelector("#app").innerHTML = draw(layoutMap);
 
-document.querySelector("#md").addEventListener("click", () => {
-    let colCount = 3;
+//     document.querySelectorAll(".item").forEach((elem, index) => {
+//         elem.innerHTML = index + 1;
+//     });
+// });
 
-    let layoutMap = place(colCount, 40);
+// document.querySelector("#md").addEventListener("click", () => {
+//     let colCount = 3;
 
-    document.querySelector("#app").style = `width:${colCount * 100}px`;
-    document.querySelector("#app").innerHTML = draw(layoutMap);
+//     let layoutMap = place(colCount, 40);
 
-    document.querySelectorAll(".item").forEach((elem, index) => {
-        elem.innerHTML = index + 1;
-    });
-});
+//     document.querySelector("#app").style = `width:${colCount * 100}px`;
+//     document.querySelector("#app").innerHTML = draw(layoutMap);
 
-document.querySelector("#sm").addEventListener("click", () => {
-    let colCount = 2;
+//     document.querySelectorAll(".item").forEach((elem, index) => {
+//         elem.innerHTML = index + 1;
+//     });
+// });
 
-    let layoutMap = place(colCount, 40);
+// document.querySelector("#sm").addEventListener("click", () => {
+//     let colCount = 2;
 
-    document.querySelector("#app").style = `width:${colCount * 100}px`;
-    document.querySelector("#app").innerHTML = draw(layoutMap);
+//     let layoutMap = place(colCount, 40);
 
-    document.querySelectorAll(".item").forEach((elem, index) => {
-        elem.innerHTML = index + 1;
-    });
-});
+//     document.querySelector("#app").style = `width:${colCount * 100}px`;
+//     document.querySelector("#app").innerHTML = draw(layoutMap);
+
+//     document.querySelectorAll(".item").forEach((elem, index) => {
+//         elem.innerHTML = index + 1;
+//     });
+// });
