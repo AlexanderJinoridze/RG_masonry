@@ -124,40 +124,37 @@ function generateRGGridMap(columns, totalItems) {
 
     console.log("leftover", leftover);
 
-    if (leftover > 0) {
-        while (leftover > 0) {
-            for (let i = 0; i < lines.length; i++) {
-                if (leftover > 0) {
-                    let line = lines[i];
+    while (leftover > 0) {
+        for (let i = 0; i < lines.length; i++) {
+            if (leftover <= 0) {
+                continue;
+            }
 
-                    if (line.includes("horizontals") || line.includes("double")) {
-                        // Join vertically
-                        // let halfChance = Math.random() < 0.5;
+            let lineContent = lines[i];
 
-                        if (line.includes("horizontals")) {
-                            line.splice(line.indexOf("horizontals"), 1, "square");
-                        } else {
-                            line.splice(line.indexOf("double"), 1, "vertical");
-                        }
+            if (lineContent.includes("horizontals") || lineContent.includes("double")) {
+                // Join vertically
 
-                        leftover = leftover - 1;
-                    } else if (line.includes("vertical")) {
-                        // Join horizontally
-                        // if (line.includes("vertical")) {
-                        // let line = ["s", "v", "v", "d"];
-                        let firstFoundId = line.indexOf("vertical");
-                        let nextOfSameVal = line.slice(firstFoundId + 1).indexOf("vertical");
+                if (lineContent.includes("horizontals")) {
+                    lineContent.splice(lineContent.indexOf("horizontals"), 1, "square");
+                } else {
+                    lineContent.splice(lineContent.indexOf("double"), 1, "vertical");
+                }
 
-                        if (nextOfSameVal >= 0) {
-                            let nextFoundId = nextOfSameVal + 1 + firstFoundId;
+                leftover = leftover - 1;
+            } else if (lineContent.includes("vertical")) {
+                // Join horizontally
 
-                            line[firstFoundId] = "square";
-                            line.splice(nextFoundId, 1);
+                let firstFoundId = lineContent.indexOf("vertical");
+                let nextOfSameVal = lineContent.slice(firstFoundId + 1).indexOf("vertical");
 
-                            leftover = leftover - 1;
-                        }
-                        // }
-                    }
+                if (nextOfSameVal >= 0) {
+                    let nextFoundId = nextOfSameVal + 1 + firstFoundId;
+
+                    lineContent[firstFoundId] = "square";
+                    lineContent.splice(nextFoundId, 1);
+
+                    leftover = leftover - 1;
                 }
             }
         }
@@ -168,102 +165,9 @@ function generateRGGridMap(columns, totalItems) {
         resultMap.push(...lineContent);
     }
 
-    // let count = countPlacedItems(resultMap);
-    // console.log(count - totalItems, count);
-    // let leftorver2 = count - totalItems;
-    // let zaza = "";
-
-    // leftover = itemsAbleToSet - totalItems;
-
-    // let resultingArray = [];
-
-    // console.log("leftover", leftover);
-    // while (leftover > 0) {
-    //     for (let i = 0; i < perline.length; i++) {
-    //         let line = perline[i];
-    //         // perline.forEach((line) => {
-    //         console.log("------");
-    //         if (leftover >= 0) {
-    //             // let halfChance = Math.random() < 0.5;
-
-    //             console.log("LINE BEFORE", line);
-
-    //             if (line.includes("horizontals") || line.includes("double")) {
-    //                 // Join vertically
-    //                 // let halfChance = Math.random() < 0.5;
-
-    //                 if (line.includes("horizontals")) {
-    //                     line.splice(line.indexOf("horizontals"), 1, "square");
-    //                 } else {
-    //                     line.splice(line.indexOf("double"), 1, "vertical");
-    //                 }
-
-    //                 leftover = leftover - 1;
-    //             } // } else if (line.includes("vertical")) {
-    //             //     // Join horizontally
-    //             //     // if (line.includes("vertical")) {
-    //             //     // let line = ["s", "v", "v", "d"];
-    //             //     let firstFoundId = line.indexOf("vertical");
-    //             //     let nextOfSameVal = line.slice(firstFoundId + 1).indexOf("vertical");
-
-    //             //     if (nextOfSameVal >= 0) {
-    //             //         let nextFoundId = nextOfSameVal + 1 + firstFoundId;
-
-    //             //         line[firstFoundId] = "square";
-    //             //         line.splice(nextFoundId, 1);
-
-    //             //         leftover = leftover - 1;
-    //             //     }
-    //             //     // }
-    //             // }
-    //         }
-
-    //         console.log("LINE", line);
-
-    //         resultingArray = resultingArray.concat(line);
-
-    //         // console.log("resultingArray", resultingArray);
-    //         // });
-    //     }
-    // }
-
-    //console.log("RES", resultingArray);
-
     let itemNumber = countPlacedItems(resultMap);
+
     console.log(itemNumber - totalItems, itemNumber);
-
-    // console.log(leftorver2);
-
-    // if (leftorver2) {
-    // perline.forEach((perlineRow) => {
-    //     // console.log(perlineRow, perlineRow.toString());
-    //     if (leftover && perlineRow.toString().includes("vertical,vertical")) {
-    //         perlineRow = perlineRow.toString().replace("vertical,vertical", "square");
-
-    //         leftover = leftover - 1;
-    //     }
-
-    //     zaza = zaza + "," + perlineRow;
-    // });
-
-    // let soso = zaza.substring(1).split(",");
-
-    // console.log(soso);
-    // }
-
-    // leftover = itemsAbleToSet - totalItems;
-
-    // console.log(perline, leftover, itemsAbleToSet);
-
-    // loop(leftover, (i) => {
-    //     let halfChance = Math.random() < 0.5;
-
-    //     if (halfChance) {
-    //         resultMap.splice(resultMap.indexOf("horizontals"), 1, "square");
-    //     } else {
-    //         resultMap.splice(resultMap.indexOf("double"), 1, "vertical");
-    //     }
-    // });
 
     return resultMap;
 }
@@ -318,9 +222,11 @@ function draw(arr) {
     return res;
 }
 
-let colCount = 5;
+let colCount = 4;
 
-let layoutMap = generateRGGridMap(colCount, 40);
+let layoutMap = generateRGGridMap(colCount, 5);
+
+console.log(layoutMap);
 
 document.querySelector("#app").style = `width:${colCount * 100}px`;
 document.querySelector("#app").innerHTML = draw(layoutMap);
