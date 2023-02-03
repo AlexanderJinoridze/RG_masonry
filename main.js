@@ -124,6 +124,7 @@ function generateRGGridMap(columns, totalItems) {
 
     console.log("leftover", leftover);
 
+    //if (totalItems > columns) {
     while (leftover > 0) {
         for (let i = 0; i < lines.length; i++) {
             if (leftover <= 0) {
@@ -164,6 +165,11 @@ function generateRGGridMap(columns, totalItems) {
         let lineContent = lines[i];
         resultMap.push(...lineContent);
     }
+    //}
+    // else {
+    //     lines[0].length = totalItems;
+    //     resultMap.push(...lines[0]);
+    // }
 
     let itemNumber = countPlacedItems(resultMap);
 
@@ -222,11 +228,9 @@ function draw(arr) {
     return res;
 }
 
-let colCount = 4;
+let colCount = 10;
 
-let layoutMap = generateRGGridMap(colCount, 5);
-
-console.log(layoutMap);
+let layoutMap = generateRGGridMap(colCount, 50);
 
 document.querySelector("#app").style = `width:${colCount * 100}px`;
 document.querySelector("#app").innerHTML = draw(layoutMap);
