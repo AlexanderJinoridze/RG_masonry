@@ -43,9 +43,9 @@ body {
     flex-flow: row wrap;
 }
 
-#app > *:last-child {
+/* #app > *:last-child {
     flex: 1;
-}
+} */
 
 #app > .h:last-child,
 #app > .s:last-child {

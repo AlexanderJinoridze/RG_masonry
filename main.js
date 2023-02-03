@@ -29,7 +29,7 @@ function countPlacedItems(resultMap) {
         }
 
         count = count + itemsPlaced;
-        console.log(gridBlock, itemsPlaced, count);
+        // console.log(gridBlock, itemsPlaced, count);
     });
 
     return count;
@@ -42,7 +42,7 @@ function generateRGGridMap(columns, totalItems) {
     let itemsLeft = totalItems;
     let leftover = null;
 
-    let perline = [];
+    let lines = [];
 
     var i = 0;
 
@@ -55,7 +55,7 @@ function generateRGGridMap(columns, totalItems) {
 
         console.log("--------------------");
 
-        let perlineRow = [];
+        let lineContent = [];
         while (freeSpaceOfLine > 0) {
             if (freeSpaceOfLine <= 0) {
                 continue;
@@ -112,42 +112,145 @@ function generateRGGridMap(columns, totalItems) {
                 itemsLeft = itemsLeft - 1;
             }
 
-            resultMap.push(selectedBlockType);
+            // resultMap.push(selectedBlockType);
             i = i + 1;
 
-            perlineRow.push(selectedBlockType);
+            lineContent.push(selectedBlockType);
         }
-        perline.push(perlineRow);
+        lines.push(lineContent);
     }
 
     console.log("====================");
 
+    leftover = itemsAbleToSet - totalItems;
+
+    console.log("leftover", leftover);
+
+    if (leftover > 0) {
+        while (leftover > 0) {
+            for (let i = 0; i < lines.length; i++) {
+                if (leftover > 0) {
+                    let line = lines[i];
+
+                    if (line.includes("horizontals") || line.includes("double")) {
+                        // Join vertically
+                        // let halfChance = Math.random() < 0.5;
+
+                        if (line.includes("horizontals")) {
+                            line.splice(line.indexOf("horizontals"), 1, "square");
+                        } else {
+                            line.splice(line.indexOf("double"), 1, "vertical");
+                        }
+
+                        leftover = leftover - 1;
+                    } else if (line.includes("vertical")) {
+                        // Join horizontally
+                        // if (line.includes("vertical")) {
+                        // let line = ["s", "v", "v", "d"];
+                        let firstFoundId = line.indexOf("vertical");
+                        let nextOfSameVal = line.slice(firstFoundId + 1).indexOf("vertical");
+
+                        if (nextOfSameVal >= 0) {
+                            let nextFoundId = nextOfSameVal + 1 + firstFoundId;
+
+                            line[firstFoundId] = "square";
+                            line.splice(nextFoundId, 1);
+
+                            leftover = leftover - 1;
+                        }
+                        // }
+                    }
+                }
+            }
+        }
+    }
+
+    for (let i = 0; i < lines.length; i++) {
+        let lineContent = lines[i];
+        resultMap.push(...lineContent);
+    }
+
     // let count = countPlacedItems(resultMap);
     // console.log(count - totalItems, count);
-
-    leftover = itemsAbleToSet - totalItems;
     // let leftorver2 = count - totalItems;
-    let zaza = "";
+    // let zaza = "";
+
+    // leftover = itemsAbleToSet - totalItems;
+
+    // let resultingArray = [];
+
+    // console.log("leftover", leftover);
+    // while (leftover > 0) {
+    //     for (let i = 0; i < perline.length; i++) {
+    //         let line = perline[i];
+    //         // perline.forEach((line) => {
+    //         console.log("------");
+    //         if (leftover >= 0) {
+    //             // let halfChance = Math.random() < 0.5;
+
+    //             console.log("LINE BEFORE", line);
+
+    //             if (line.includes("horizontals") || line.includes("double")) {
+    //                 // Join vertically
+    //                 // let halfChance = Math.random() < 0.5;
+
+    //                 if (line.includes("horizontals")) {
+    //                     line.splice(line.indexOf("horizontals"), 1, "square");
+    //                 } else {
+    //                     line.splice(line.indexOf("double"), 1, "vertical");
+    //                 }
+
+    //                 leftover = leftover - 1;
+    //             } // } else if (line.includes("vertical")) {
+    //             //     // Join horizontally
+    //             //     // if (line.includes("vertical")) {
+    //             //     // let line = ["s", "v", "v", "d"];
+    //             //     let firstFoundId = line.indexOf("vertical");
+    //             //     let nextOfSameVal = line.slice(firstFoundId + 1).indexOf("vertical");
+
+    //             //     if (nextOfSameVal >= 0) {
+    //             //         let nextFoundId = nextOfSameVal + 1 + firstFoundId;
+
+    //             //         line[firstFoundId] = "square";
+    //             //         line.splice(nextFoundId, 1);
+
+    //             //         leftover = leftover - 1;
+    //             //     }
+    //             //     // }
+    //             // }
+    //         }
+
+    //         console.log("LINE", line);
+
+    //         resultingArray = resultingArray.concat(line);
+
+    //         // console.log("resultingArray", resultingArray);
+    //         // });
+    //     }
+    // }
+
+    //console.log("RES", resultingArray);
+
+    let itemNumber = countPlacedItems(resultMap);
+    console.log(itemNumber - totalItems, itemNumber);
 
     // console.log(leftorver2);
 
     // if (leftorver2) {
-    perline.forEach((perlineRow) => {
-        // console.log(perlineRow, perlineRow.toString());
-        if (leftover && perlineRow.toString().includes("vertical,vertical")) {
-            perlineRow = perlineRow.toString().replace("vertical,vertical", "square");
+    // perline.forEach((perlineRow) => {
+    //     // console.log(perlineRow, perlineRow.toString());
+    //     if (leftover && perlineRow.toString().includes("vertical,vertical")) {
+    //         perlineRow = perlineRow.toString().replace("vertical,vertical", "square");
 
-            leftover = leftover - 1;
-        }
+    //         leftover = leftover - 1;
+    //     }
 
-        zaza = zaza + "," + perlineRow;
-    });
+    //     zaza = zaza + "," + perlineRow;
+    // });
 
-    let soso = zaza.substring(1).split(",");
+    // let soso = zaza.substring(1).split(",");
 
-    console.log(soso);
-    let count2 = countPlacedItems(soso);
-    console.log(count2 - totalItems, count2);
+    // console.log(soso);
     // }
 
     // leftover = itemsAbleToSet - totalItems;
@@ -167,66 +270,66 @@ function generateRGGridMap(columns, totalItems) {
     return resultMap;
 }
 
-generateRGGridMap(5, 13);
+// generateRGGridMap(5, 13);
 
-// function drawS(data) {
-//     return `<div class="s">
-//         <div class="item"></div>
-//     </div>`;
-// }
+function drawS(data) {
+    return `<div class="s">
+        <div class="item"></div>
+    </div>`;
+}
 
-// function drawH(data) {
-//     return `<div class="h">
-//         <div class="item"></div>
-//         <div class="item"></div>
-//     </div>`;
-// }
+function drawH(data) {
+    return `<div class="h">
+        <div class="item"></div>
+        <div class="item"></div>
+    </div>`;
+}
 
-// function drawV(data) {
-//     return `<div class="v">
-//         <div class="item"></div>
-//     </div>`;
-// }
+function drawV(data) {
+    return `<div class="v">
+        <div class="item"></div>
+    </div>`;
+}
 
-// function drawD(data) {
-//     return `<div class="d">
-//         <div class="item"></div>
-//         <div class="item"></div>
-//     </div>`;
-// }
+function drawD(data) {
+    return `<div class="d">
+        <div class="item"></div>
+        <div class="item"></div>
+    </div>`;
+}
 
-// function draw(arr) {
-//     let res = "";
-//     arr.forEach((elem) => {
-//         switch (elem) {
-//             case "s":
-//                 res += drawS();
-//                 break;
-//             case "h":
-//                 res += drawH();
-//                 break;
-//             case "v":
-//                 res += drawV();
-//                 break;
-//             default:
-//                 res += drawD();
-//                 break;
-//         }
-//     });
+function draw(arr) {
+    let res = "";
+    arr.forEach((elem) => {
+        switch (elem) {
+            case "square":
+                res += drawS();
+                break;
+            case "horizontals":
+                res += drawH();
+                break;
+            case "vertical":
+                res += drawV();
+                break;
+            default:
+                res += drawD();
+                break;
+        }
+    });
 
-//     return res;
-// }
+    return res;
+}
 
-// let colCount = 5;
+let colCount = 5;
 
-// let layoutMap = place(colCount, 4);
+let layoutMap = generateRGGridMap(colCount, 13);
 
-// document.querySelector("#app").style = `width:${colCount * 100}px`;
-// document.querySelector("#app").innerHTML = draw(layoutMap);
+document.querySelector("#app").style = `width:${colCount * 100}px`;
+document.querySelector("#app").innerHTML = draw(layoutMap);
 
-// document.querySelectorAll(".item").forEach((elem, index) => {
-//     elem.innerHTML = index + 1;
-// });
+document.querySelectorAll(".item").forEach((elem, index) => {
+    elem.innerHTML = index + 1;
+});
 
 // document.querySelector("#lgx").addEventListener("click", () => {
 //     let colCount = 5;
