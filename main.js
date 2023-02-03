@@ -8,13 +8,13 @@ function getRandomElementOfArray(array) {
     return array[getRandomNumber(0, array.length)];
 }
 
-function loop(times, callback) {
-    Array(times)
-        .fill("")
-        .forEach(function (_, i) {
-            callback.call(this, i);
-        });
-}
+// function loop(times, callback) {
+//     Array(times)
+//         .fill("")
+//         .forEach(function (_, i) {
+//             callback.call(this, i);
+//         });
+// }
 
 function countPlacedItems(resultMap) {
     let count = 0;
@@ -29,7 +29,6 @@ function countPlacedItems(resultMap) {
         }
 
         count = count + itemsPlaced;
-        // console.log(gridBlock, itemsPlaced, count);
     });
 
     return count;
@@ -112,7 +111,6 @@ function generateRGGridMap(columns, totalItems) {
                 itemsLeft = itemsLeft - 1;
             }
 
-            // resultMap.push(selectedBlockType);
             i = i + 1;
 
             lineContent.push(selectedBlockType);
@@ -322,7 +320,7 @@ function draw(arr) {
 
 let colCount = 5;
 
-let layoutMap = generateRGGridMap(colCount, 13);
+let layoutMap = generateRGGridMap(colCount, 40);
 
 document.querySelector("#app").style = `width:${colCount * 100}px`;
 document.querySelector("#app").innerHTML = draw(layoutMap);
