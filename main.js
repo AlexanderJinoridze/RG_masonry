@@ -181,13 +181,12 @@ function item(data) {
 }
 
 function block(type, itemData, item) {
-    console.log(itemData);
-
     let content = "";
 
     itemData.map((data) => {
         content += item(data);
     });
+
     return `
         <div class="${type}">
             ${content}
@@ -230,65 +229,18 @@ let data = Array(80)
 
 drawGrid(document.querySelector("#app"), item, 5, data);
 
-// let colCount = 5;
+document.querySelector("#lgx").addEventListener("click", () => {
+    drawGrid(document.querySelector("#app"), item, 5, data);
+});
 
-// let layoutMap = generateGridMap(colCount, 1000);
+document.querySelector("#lg").addEventListener("click", () => {
+    drawGrid(document.querySelector("#app"), item, 4, data);
+});
 
-// document.querySelector("#app").style = `width:${colCount * 100}px`;
-// document.querySelector("#app").innerHTML = draw(layoutMap);
+document.querySelector("#md").addEventListener("click", () => {
+    drawGrid(document.querySelector("#app"), item, 3, data);
+});
 
-// document.querySelectorAll(".item").forEach((elem, index) => {
-//     elem.innerHTML = index + 1;
-// });
-
-// document.querySelector("#lgx").addEventListener("click", () => {
-//     let colCount = 5;
-
-//     let layoutMap = place(colCount, 40);
-
-//     document.querySelector("#app").style = `width:${colCount * 100}px`;
-//     document.querySelector("#app").innerHTML = draw(layoutMap);
-
-//     document.querySelectorAll(".item").forEach((elem, index) => {
-//         elem.innerHTML = index + 1;
-//     });
-// });
-
-// document.querySelector("#lg").addEventListener("click", () => {
-//     let colCount = 4;
-
-//     let layoutMap = place(colCount, 40);
-
-//     document.querySelector("#app").style = `width:${colCount * 100}px`;
-//     document.querySelector("#app").innerHTML = draw(layoutMap);
-
-//     document.querySelectorAll(".item").forEach((elem, index) => {
-//         elem.innerHTML = index + 1;
-//     });
-// });
-
-// document.querySelector("#md").addEventListener("click", () => {
-//     let colCount = 3;
-
-//     let layoutMap = place(colCount, 40);
-
-//     document.querySelector("#app").style = `width:${colCount * 100}px`;
-//     document.querySelector("#app").innerHTML = draw(layoutMap);
-
-//     document.querySelectorAll(".item").forEach((elem, index) => {
-//         elem.innerHTML = index + 1;
-//     });
-// });
-
-// document.querySelector("#sm").addEventListener("click", () => {
-//     let colCount = 2;
-
-//     let layoutMap = place(colCount, 40);
-
-//     document.querySelector("#app").style = `width:${colCount * 100}px`;
-//     document.querySelector("#app").innerHTML = draw(layoutMap);
-
-//     document.querySelectorAll(".item").forEach((elem, index) => {
-//         elem.innerHTML = index + 1;
-//     });
-// });
+document.querySelector("#sm").addEventListener("click", () => {
+    drawGrid(document.querySelector("#app"), item, 2, data);
+});
