@@ -36,11 +36,12 @@ body {
 #app {
     max-width: 100%;
     margin: 0 auto;
-    padding: 2rem;
     display: flex;
     text-align: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex-flow: row wrap;
+
+    outline: 2px solid yellow;
 }
 
 .s,

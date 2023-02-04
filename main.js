@@ -29,9 +29,12 @@ function countPlacedItems(resultMap) {
 function generateRGGridMap(columns, totalItems) {
     const blockTypes = ["square", "horizontals", "vertical", "double"];
     const resultMap = [];
+
     let itemsAbleToSet = 0;
     let itemsLeft = totalItems;
     let leftover = null;
+
+    columns = columns >= totalItems ? totalItems - 1 : columns;
 
     let lines = [];
 
@@ -49,6 +52,10 @@ function generateRGGridMap(columns, totalItems) {
 
         while (freeSpaceOfLine > 0) {
             // if (freeSpaceOfLine <= 0) {
+            //     continue;
+            // }
+
+            // if (freeSpaceOfLine < 0) {
             //     continue;
             // }
 
@@ -110,10 +117,6 @@ function generateRGGridMap(columns, totalItems) {
 
             freeSpaceOfLine = freeSpaceOfLine - spaceTaken;
 
-            if (freeSpaceOfLine < 0) {
-                continue;
-            }
-
             itemsAbleToSet = itemsAbleToSet + itemsAffected;
             itemsLeft = itemsLeft - itemsAffected;
 
@@ -130,50 +133,55 @@ function generateRGGridMap(columns, totalItems) {
 
     console.log("leftover", leftover);
 
-    if (totalItems > columns) {
+    //if (totalItems > columns) {
+    if (leftover < totalItems) {
         while (leftover > 0) {
-            for (let i = 0; i < lines.length; i++) {
-                if (leftover <= 0) {
-                    continue;
+            //for (let i = 0; i < lines.length; i++) {
+            //if (leftover <= 0) {
+            //    continue;
+            //}
+
+            // let lineContent = lines[i];
+            let lineContent = getRandomElementOfArray(lines);
+
+            if (lineContent.includes("horizontals") || lineContent.includes("double")) {
+                // Join vertically
+
+                if (lineContent.includes("horizontals")) {
+                    lineContent.splice(lineContent.indexOf("horizontals"), 1, "square");
+                } else {
+                    lineContent.splice(lineContent.indexOf("double"), 1, "vertical");
                 }
 
-                let lineContent = lines[i];
+                leftover = leftover - 1;
+            } else if (lineContent.includes("vertical")) {
+                // Join horizontally
 
-                if (lineContent.includes("horizontals") || lineContent.includes("double")) {
-                    // Join vertically
+                let firstFoundId = lineContent.indexOf("vertical");
+                let nextOfSameVal = lineContent.slice(firstFoundId + 1).indexOf("vertical");
 
-                    if (lineContent.includes("horizontals")) {
-                        lineContent.splice(lineContent.indexOf("horizontals"), 1, "square");
-                    } else {
-                        lineContent.splice(lineContent.indexOf("double"), 1, "vertical");
-                    }
+                if (nextOfSameVal >= 0) {
+                    let nextFoundId = nextOfSameVal + 1 + firstFoundId;
+
+                    lineContent[firstFoundId] = "square";
+                    lineContent.splice(nextFoundId, 1);
 
                     leftover = leftover - 1;
-                } else if (lineContent.includes("vertical")) {
-                    // Join horizontally
-
-                    let firstFoundId = lineContent.indexOf("vertical");
-                    let nextOfSameVal = lineContent.slice(firstFoundId + 1).indexOf("vertical");
-
-                    if (nextOfSameVal >= 0) {
-                        let nextFoundId = nextOfSameVal + 1 + firstFoundId;
-
-                        lineContent[firstFoundId] = "square";
-                        lineContent.splice(nextFoundId, 1);
-
-                        leftover = leftover - 1;
-                    }
                 }
             }
-        }
-
-        for (let i = 0; i < lines.length; i++) {
-            let lineContent = lines[i];
-            resultMap.push(...lineContent);
+            //}
         }
     } else {
-        resultMap.push(...lines[0]);
+        console.log("WE BONED");
     }
+
+    for (let i = 0; i < lines.length; i++) {
+        let lineContent = lines[i];
+        resultMap.push(...lineContent);
+    }
+    // } else {
+    //     resultMap.push(...lines[0]);
+    // }
 
     let itemNumber = countPlacedItems(resultMap);
 
@@ -234,7 +242,7 @@ function draw(arr) {
 
 let colCount = 10;
 
-let layoutMap = generateRGGridMap(colCount, 80);
+let layoutMap = generateRGGridMap(colCount, 9);
 
 document.querySelector("#app").style = `width:${colCount * 100}px`;
 document.querySelector("#app").innerHTML = draw(layoutMap);
