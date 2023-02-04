@@ -4,8 +4,69 @@ function getRandomNumber(from = 0, to = 1) {
     return Math.floor(Math.random() * (to - from)) + from;
 }
 
-function getRandomElementOfArray(array) {
+function getRandomElementOf(array) {
     return array[getRandomNumber(0, array.length)];
+}
+
+function getIndexesOf(value, array) {
+    var results = [];
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === value) {
+            results.push(i);
+        }
+    }
+
+    return results;
+}
+
+function eitherOr(firstFunction, secondFunction) {
+    if (Math.random() < 0.5) {
+        return firstFunction();
+    } else {
+        return secondFunction();
+    }
+}
+
+function joinVertically(dividedBlockType, line) {
+    let result = [...line];
+
+    let indexesOfBlocks = getIndexesOf(dividedBlockType, result);
+
+    if (indexesOfBlocks.length > 0) {
+        let indexOfPickedBlock = getRandomElementOf(indexesOfBlocks);
+
+        result.splice(indexOfPickedBlock, 1, dividedBlockType === "horizontals" ? "square" : "vertical");
+
+        return [result, 1];
+    }
+}
+
+function joinHorizontally(halfWidthBlockType, line) {
+    let result = [...line];
+
+    let indexesOfBlocks = getIndexesOf(halfWidthBlockType, result);
+
+    if (indexesOfBlocks.length > 1) {
+        let replacementBlock;
+        let spaceTaken;
+
+        let firstPick = getRandomElementOf(indexesOfBlocks);
+        indexesOfBlocks.splice(indexesOfBlocks.indexOf(firstPick), 1);
+        let secondPick = getRandomElementOf(indexesOfBlocks);
+
+        if (halfWidthBlockType === "vertical") {
+            replacementBlock = "square";
+            spaceTaken = 1;
+        } else if (halfWidthBlockType === "double") {
+            replacementBlock = "horizontals";
+            spaceTaken = 2;
+        }
+
+        result[firstPick] = replacementBlock;
+        result.splice(secondPick, 1);
+
+        return [result, spaceTaken];
+    }
 }
 
 function generateRGGridMap(columns, totalItems) {
@@ -26,7 +87,7 @@ function generateRGGridMap(columns, totalItems) {
         let line = [];
 
         while (freeSpaceOfLine > 0) {
-            let selectedBlockType = getRandomElementOfArray(blockTypes);
+            let selectedBlockType = getRandomElementOf(blockTypes);
             let spaceTaken = 0;
             let itemsAffected = 0;
 
@@ -72,28 +133,37 @@ function generateRGGridMap(columns, totalItems) {
     let leftover = itemsAbleToSet - totalItems;
 
     while (leftover > 0) {
-        let line = getRandomElementOfArray(lines);
+        let randomLineIndex = getRandomNumber(0, lines.length);
+        let line = lines[randomLineIndex];
+        let randomBlock = getRandomElementOf(["horizontals", "double", "vertical"]);
 
-        if (line.includes("horizontals") || line.includes("double")) {
-            if (line.includes("horizontals")) {
-                line.splice(line.indexOf("horizontals"), 1, "square");
-            } else {
-                line.splice(line.indexOf("double"), 1, "vertical");
-            }
+        let result;
 
-            leftover = leftover - 1;
-        } else if (line.includes("vertical")) {
-            let firstFoundId = line.indexOf("vertical");
-            let nextOfSameVal = line.slice(firstFoundId + 1).indexOf("vertical");
+        switch (randomBlock) {
+            case "horizontals":
+                result = joinVertically("horizontals", line);
+                break;
+            case "vertical":
+                result = joinHorizontally("vertical", line);
+                break;
+            case "double":
+                if (leftover > 1) {
+                    result = eitherOr(
+                        () => joinVertically("double", line),
+                        () => joinHorizontally("double", line)
+                    );
+                } else {
+                    result = joinVertically("double", line);
+                }
 
-            if (nextOfSameVal >= 0) {
-                let nextFoundId = nextOfSameVal + 1 + firstFoundId;
+                break;
+        }
 
-                line[firstFoundId] = "square";
-                line.splice(nextFoundId, 1);
+        if (result) {
+            let [newLine, leftoverToDelete] = result;
 
-                leftover = leftover - 1;
-            }
+            leftover = leftover - leftoverToDelete;
+            lines[randomLineIndex] = newLine;
         }
     }
 
@@ -103,8 +173,6 @@ function generateRGGridMap(columns, totalItems) {
 
     return resultMap;
 }
-
-// generateRGGridMap(5, 13);
 
 function drawS(data) {
     return `<div class="s">
