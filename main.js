@@ -69,7 +69,7 @@ function joinHorizontally(halfWidthBlockType, line) {
     }
 }
 
-function generateRGGridMap(columns, totalItems) {
+function generateGridMap(columns, totalItems) {
     if (columns >= totalItems) {
         columns = totalItems - 1;
     }
@@ -174,64 +174,72 @@ function generateRGGridMap(columns, totalItems) {
     return resultMap;
 }
 
-function drawS(data) {
-    return `<div class="s">
-        <div class="item"></div>
-    </div>`;
+function item(data) {
+    return `
+        <div id="${data.id}" class="item">${data.title}</div>
+    `;
 }
 
-function drawH(data) {
-    return `<div class="h">
-        <div class="item"></div>
-        <div class="item"></div>
-    </div>`;
+function block(type, itemData, item) {
+    console.log(itemData);
+
+    let content = "";
+
+    itemData.map((data) => {
+        content += item(data);
+    });
+    return `
+        <div class="${type}">
+            ${content}
+        </div>
+    `;
 }
 
-function drawV(data) {
-    return `<div class="v">
-        <div class="item"></div>
-    </div>`;
-}
+function drawGrid(root, itemTemplate, columns, data) {
+    let gridMap = generateGridMap(columns, data.length);
+    let result = "";
+    let i = 0;
+    let k = 0;
 
-function drawD(data) {
-    return `<div class="d">
-        <div class="item"></div>
-        <div class="item"></div>
-    </div>`;
-}
+    while (k < gridMap.length) {
+        console.log(i);
+        let blockType = gridMap[k];
+        let itemData = [data[i]];
+        let step = 1;
 
-function draw(arr) {
-    let res = "";
-    arr.forEach((elem) => {
-        switch (elem) {
-            case "square":
-                res += drawS();
-                break;
-            case "horizontals":
-                res += drawH();
-                break;
-            case "vertical":
-                res += drawV();
-                break;
-            default:
-                res += drawD();
-                break;
+        if (["horizontals", "double"].includes(blockType)) {
+            itemData = data.slice(i, i + 2);
+            step = 2;
         }
+
+        result += block(blockType, itemData, itemTemplate);
+
+        k = k + 1;
+        i = i + step;
+    }
+
+    root.style = `width:${columns * 100}px`;
+    root.innerHTML = result;
+}
+
+let data = Array(80)
+    .fill("")
+    .map((_, i) => {
+        return { id: i, title: `#_${i + 1}` };
     });
 
-    return res;
-}
+drawGrid(document.querySelector("#app"), item, 5, data);
 
-let colCount = 10;
+// let colCount = 5;
 
-let layoutMap = generateRGGridMap(colCount, 90);
+// let layoutMap = generateGridMap(colCount, 1000);
 
-document.querySelector("#app").style = `width:${colCount * 100}px`;
-document.querySelector("#app").innerHTML = draw(layoutMap);
+// document.querySelector("#app").style = `width:${colCount * 100}px`;
+// document.querySelector("#app").innerHTML = draw(layoutMap);
 
-document.querySelectorAll(".item").forEach((elem, index) => {
-    elem.innerHTML = index + 1;
-});
+// document.querySelectorAll(".item").forEach((elem, index) => {
+//     elem.innerHTML = index + 1;
+// });
 
 // document.querySelector("#lgx").addEventListener("click", () => {
 //     let colCount = 5;

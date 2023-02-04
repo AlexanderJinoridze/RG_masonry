@@ -42,51 +42,52 @@ body {
     flex-flow: row wrap;
 
     outline: 2px solid yellow;
-}
-
-.s,
-.h,
-.d,
-.v {
-    display: flex;
-    flex-direction: column;
-
-    outline: 2px solid blue;
-    outline-offset: -4px;
+    outline-offset: 1px;
 }
 
 .item {
     outline: 2px solid red;
-    outline-offset: -9px;
+    outline-offset: -12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
+    font-size: 1.5rem;
     line-height: 1;
     color: red;
     font-weight: bold;
 }
 
-.s,
-.h {
+.square,
+.horizontals,
+.double,
+.vertical {
+    display: flex;
+    flex-direction: column;
+
+    outline: 2px solid blue;
+    outline-offset: -6px;
+}
+
+.square,
+.horizontals {
     width: 200px;
     height: 200px;
 }
 
-.d,
-.v {
+.double,
+.vertical {
     width: 100px;
     height: 200px;
 }
 
-.s .item,
-.v .item {
+.square .item,
+.vertical .item {
     width: 100%;
     height: 100%;
 }
 
-.h .item,
-.d .item {
+.horizontals .item,
+.double .item {
     width: 100%;
     height: 50%;
 }
