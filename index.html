@@ -7,10 +7,20 @@
         <title>Vite App</title>
     </head>
     <body>
-        <button id="lgx">TV</button>
-        <button id="lg">Desktop</button>
-        <button id="md">Tablet</button>
-        <button id="sm">Mobile</button>
+        <div>
+            <label for="columns">Columns:</label>
+            <br />
+            <input type="number" name="columns" id="columns" value="5" min="1" />
+        </div>
+        <div>
+            <label for="items">Items:</label>
+            <br />
+            <input type="number" name="items" id="items" value="20" min="1" />
+        </div>
+        <button id="clmn_5">5 Columns</button>
+        <button id="clmn_4">4 Columns</button>
+        <button id="clmn_3">3 Columns</button>
+        <button id="clmn_2">2 Columns</button>
         <div id="app"></div>
         <script type="module" defer src="/main.js"></script>
     </body>
