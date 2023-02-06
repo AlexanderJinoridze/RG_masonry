@@ -169,6 +169,7 @@ function generateGridMap(columns, totalItems) {
         }
     }
 
+    console.log(totalItems, columns);
     if (totalItems === columns) {
         console.log(lines);
 
@@ -197,16 +198,18 @@ function generateGridMap(columns, totalItems) {
                     let blockToBeChanged = lines[0].indexOf(randomBlock);
                     let replacementBlock;
 
-                    if (lines[0][blockToBeChanged] === "vertical") {
-                        replacementBlock = "square";
-                    } else if (lines[0][blockToBeChanged] === "double") {
-                        replacementBlock = "horizontals";
+                    if (blockToBeChanged >= 0) {
+                        if (lines[0][blockToBeChanged] === "vertical") {
+                            replacementBlock = "square";
+                        } else if (lines[0][blockToBeChanged] === "double") {
+                            replacementBlock = "horizontals";
+                        }
+
+                        lines[0].splice(blockToBeChanged, 1, replacementBlock);
+
+                        console.log(lines[0]);
+                        spaceToBeFilled -= 1;
                     }
-
-                    lines[0].splice(blockToBeChanged, 1, replacementBlock);
-
-                    console.log(lines[0]);
-                    spaceToBeFilled -= 1;
                 }
             }
         }
@@ -265,16 +268,16 @@ function drawGrid(root, itemTemplate, columns, data) {
     root.innerHTML = result;
 }
 
-let data = Array(10)
+let data = Array(13)
     .fill("")
     .map((_, i) => {
         return { id: i, title: `#${i + 1}` };
     });
 
-drawGrid(document.querySelector("#app"), item, 10, data);
+drawGrid(document.querySelector("#app"), item, 13, data);
 
 document.querySelector("#clmn_5").addEventListener("click", () => {
-    drawGrid(document.querySelector("#app"), item, 10, data);
+    drawGrid(document.querySelector("#app"), item, 13, data);
 });
 
 document.querySelector("#clmn_4").addEventListener("click", () => {
@@ -289,18 +292,18 @@ document.querySelector("#clmn_2").addEventListener("click", () => {
     drawGrid(document.querySelector("#app"), item, 2, data);
 });
 
-document.querySelector("#columns").addEventListener("change", (e) => {
-    drawGrid(document.querySelector("#app"), item, e.target.value, data);
+document.querySelector("#columns").addEventListener("input", (e) => {
+    drawGrid(document.querySelector("#app"), item, parseInt(e.target.value), data);
 });
 
-document.querySelector("#items").addEventListener("change", (e) => {
+document.querySelector("#items").addEventListener("input", (e) => {
     let data = Array(parseInt(e.target.value))
         .fill("")
         .map((_, i) => {
             return { id: i, title: `#${i + 1}` };
         });
 
-    drawGrid(document.querySelector("#app"), item, document.querySelector("#columns").value, data);
+    drawGrid(document.querySelector("#app"), item, parseInt(document.querySelector("#columns").value), data);
 });
 
 // Array(10000)
