@@ -169,6 +169,49 @@ function generateGridMap(columns, totalItems) {
         }
     }
 
+    if (totalItems === columns) {
+        console.log(lines);
+
+        let spaceTaken = 0;
+
+        lines[0].forEach((blockType) => {
+            if (["square", "horizontals"].includes(blockType)) {
+                spaceTaken = spaceTaken + 2;
+            } else if (["vertical", "double"].includes(blockType)) {
+                spaceTaken = spaceTaken + 1;
+            }
+        });
+
+        console.log("spaceTaken", spaceTaken);
+
+        if (columns > spaceTaken) {
+            let spaceToBeFilled = columns - spaceTaken;
+
+            console.log("spaceToBeFilled", spaceToBeFilled);
+
+            while (spaceToBeFilled > 0) {
+                let randomBlock = getRandomElementOf(["double", "vertical"]);
+                //let blockToBeChanged = lines[0].indexOf("double");
+
+                if (["double", "vertical"].includes(randomBlock)) {
+                    let blockToBeChanged = lines[0].indexOf(randomBlock);
+                    let replacementBlock;
+
+                    if (lines[0][blockToBeChanged] === "vertical") {
+                        replacementBlock = "square";
+                    } else if (lines[0][blockToBeChanged] === "double") {
+                        replacementBlock = "horizontals";
+                    }
+
+                    lines[0].splice(blockToBeChanged, 1, replacementBlock);
+
+                    console.log(lines[0]);
+                    spaceToBeFilled -= 1;
+                }
+            }
+        }
+    }
+
     for (let i = 0; i < lines.length; i++) {
         resultMap.push(...lines[i]);
     }
@@ -222,16 +265,16 @@ function drawGrid(root, itemTemplate, columns, data) {
     root.innerHTML = result;
 }
 
-let data = Array(3)
+let data = Array(10)
     .fill("")
     .map((_, i) => {
         return { id: i, title: `#${i + 1}` };
     });
 
-drawGrid(document.querySelector("#app"), item, 5, data);
+drawGrid(document.querySelector("#app"), item, 10, data);
 
 document.querySelector("#clmn_5").addEventListener("click", () => {
-    drawGrid(document.querySelector("#app"), item, 5, data);
+    drawGrid(document.querySelector("#app"), item, 10, data);
 });
 
 document.querySelector("#clmn_4").addEventListener("click", () => {
@@ -260,9 +303,9 @@ document.querySelector("#items").addEventListener("change", (e) => {
     drawGrid(document.querySelector("#app"), item, document.querySelector("#columns").value, data);
 });
 
-Array(10000)
-    .fill("")
-    .forEach((_, i) => {
-        console.log(i);
-        document.querySelector("#clmn_3").click();
-    });
+// Array(10000)
+//     .fill("")
+//     .forEach((_, i) => {
+//         // console.log(i);
+//         document.querySelector("#clmn_5").click();
+//     });
