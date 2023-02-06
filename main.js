@@ -169,13 +169,11 @@ function generateGridMap(columns, totalItems) {
         }
     }
 
-    console.log(totalItems, columns);
     if (totalItems === columns) {
-        console.log(lines);
-
         let spaceTaken = 0;
+        let line = lines[0];
 
-        lines[0].forEach((blockType) => {
+        line.forEach((blockType) => {
             if (["square", "horizontals"].includes(blockType)) {
                 spaceTaken = spaceTaken + 2;
             } else if (["vertical", "double"].includes(blockType)) {
@@ -183,31 +181,25 @@ function generateGridMap(columns, totalItems) {
             }
         });
 
-        console.log("spaceTaken", spaceTaken);
-
         if (columns > spaceTaken) {
             let spaceToBeFilled = columns - spaceTaken;
 
-            console.log("spaceToBeFilled", spaceToBeFilled);
-
             while (spaceToBeFilled > 0) {
                 let randomBlock = getRandomElementOf(["double", "vertical"]);
-                //let blockToBeChanged = lines[0].indexOf("double");
 
                 if (["double", "vertical"].includes(randomBlock)) {
-                    let blockToBeChanged = lines[0].indexOf(randomBlock);
+                    let blockToBeChanged = line.indexOf(randomBlock);
                     let replacementBlock;
 
                     if (blockToBeChanged >= 0) {
-                        if (lines[0][blockToBeChanged] === "vertical") {
+                        if (line[blockToBeChanged] === "vertical") {
                             replacementBlock = "square";
-                        } else if (lines[0][blockToBeChanged] === "double") {
+                        } else if (line[blockToBeChanged] === "double") {
                             replacementBlock = "horizontals";
                         }
 
-                        lines[0].splice(blockToBeChanged, 1, replacementBlock);
+                        line.splice(blockToBeChanged, 1, replacementBlock);
 
-                        console.log(lines[0]);
                         spaceToBeFilled -= 1;
                     }
                 }
@@ -268,31 +260,57 @@ function drawGrid(root, itemTemplate, columns, data) {
     root.innerHTML = result;
 }
 
-let data = Array(13)
+let data = Array(20)
     .fill("")
     .map((_, i) => {
         return { id: i, title: `#${i + 1}` };
     });
 
-drawGrid(document.querySelector("#app"), item, 13, data);
+drawGrid(document.querySelector("#app"), item, 5, data);
 
 document.querySelector("#clmn_5").addEventListener("click", () => {
-    drawGrid(document.querySelector("#app"), item, 13, data);
+    let data = Array(parseInt(document.querySelector("#items").value))
+        .fill("")
+        .map((_, i) => {
+            return { id: i, title: `#${i + 1}` };
+        });
+    drawGrid(document.querySelector("#app"), item, 5, data);
 });
 
 document.querySelector("#clmn_4").addEventListener("click", () => {
+    let data = Array(parseInt(document.querySelector("#items").value))
+        .fill("")
+        .map((_, i) => {
+            return { id: i, title: `#${i + 1}` };
+        });
     drawGrid(document.querySelector("#app"), item, 4, data);
 });
 
 document.querySelector("#clmn_3").addEventListener("click", () => {
+    let data = Array(parseInt(document.querySelector("#items").value))
+        .fill("")
+        .map((_, i) => {
+            return { id: i, title: `#${i + 1}` };
+        });
     drawGrid(document.querySelector("#app"), item, 3, data);
 });
 
 document.querySelector("#clmn_2").addEventListener("click", () => {
+    let data = Array(parseInt(document.querySelector("#items").value))
+        .fill("")
+        .map((_, i) => {
+            return { id: i, title: `#${i + 1}` };
+        });
     drawGrid(document.querySelector("#app"), item, 2, data);
 });
 
 document.querySelector("#columns").addEventListener("input", (e) => {
+    let data = Array(parseInt(document.querySelector("#items").value))
+        .fill("")
+        .map((_, i) => {
+            return { id: i, title: `#${i + 1}` };
+        });
+
     drawGrid(document.querySelector("#app"), item, parseInt(e.target.value), data);
 });
 
