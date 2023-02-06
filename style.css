@@ -1,7 +1,7 @@
 :root {
-    font-family: Fira Code;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-size: 16px;
-    line-height: 24px;
+    line-height: 1.5;
     font-weight: 400;
 
     color-scheme: light dark;
@@ -35,19 +35,19 @@ body {
 
 #app {
     max-width: 100%;
-    margin: 0 auto;
+    margin: 32px;
     display: flex;
     text-align: center;
     justify-content: flex-start;
     flex-flow: row wrap;
 
     outline: 2px solid yellow;
-    outline-offset: 1px;
+    outline-offset: -2px;
 }
 
 .item {
     outline: 2px solid red;
-    outline-offset: -12px;
+    outline-offset: -10px;
     display: flex;
     align-items: center;
     justify-content: center;

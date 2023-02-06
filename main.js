@@ -43,13 +43,11 @@ function joinVertically(dividedBlockType, line) {
 
 function joinHorizontally(halfWidthBlockType, line) {
     let result = [...line];
-
     let indexesOfBlocks = getIndexesOf(halfWidthBlockType, result);
 
     if (indexesOfBlocks.length > 1) {
         let replacementBlock;
         let spaceTaken;
-
         let firstPick = getRandomElementOf(indexesOfBlocks);
         indexesOfBlocks.splice(indexesOfBlocks.indexOf(firstPick), 1);
         let secondPick = getRandomElementOf(indexesOfBlocks);
@@ -70,10 +68,6 @@ function joinHorizontally(halfWidthBlockType, line) {
 }
 
 function generateGridMap(columns, totalItems) {
-    if (columns >= totalItems) {
-        columns = totalItems - 1;
-    }
-
     const blockTypes = ["square", "horizontals", "vertical", "double"];
     const resultMap = [];
 
@@ -91,8 +85,16 @@ function generateGridMap(columns, totalItems) {
             let spaceTaken = 0;
             let itemsAffected = 0;
 
+            if (totalItems <= columns && itemsAbleToSet >= totalItems) {
+                break;
+            }
+
             if (itemsLeft < 2) {
                 selectedBlockType = "vertical";
+            }
+
+            if (selectedBlockType === "square" && itemsLeft <= columns) {
+                selectedBlockType = "horizontals";
             }
 
             if (["horizontals", "double"].includes(selectedBlockType)) {
@@ -220,7 +222,7 @@ function drawGrid(root, itemTemplate, columns, data) {
     root.innerHTML = result;
 }
 
-let data = Array(20)
+let data = Array(3)
     .fill("")
     .map((_, i) => {
         return { id: i, title: `#${i + 1}` };
@@ -257,3 +259,10 @@ document.querySelector("#items").addEventListener("change", (e) => {
 
     drawGrid(document.querySelector("#app"), item, document.querySelector("#columns").value, data);
 });
+
+Array(10000)
+    .fill("")
+    .forEach((_, i) => {
+        console.log(i);
+        document.querySelector("#clmn_3").click();
+    });
