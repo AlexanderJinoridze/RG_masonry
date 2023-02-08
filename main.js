@@ -1,31 +1,48 @@
 import "./style.css";
 
-function getRandomNumber(from = 0, to = 1) {
+const getRandomNumber = (from = 0, to = 1) => {
     return Math.floor(Math.random() * (to - from)) + from;
-}
+};
 
-function getRandomElementOf(array) {
+const getRandomElementOf = (array) => {
     return array[getRandomNumber(0, array.length)];
-}
+};
 
-function getIndexesOf(value, array) {
-    var results = [];
-    for (let i = 0; i < array.length; i++) {
-        if (array[i] === value) {
-            results.push(i);
+const getIndexesOf = (value, array) => {
+    return array
+        .map((elem, index) => elem === value && index)
+        .filter((elem) => elem !== false);
+};
+
+const eitherOr = (firstStatement, secondStatement) => {
+    return Math.random() < 0.5 ? firstStatement : secondStatement;
+};
+
+const isFullWidthBlock = (blockType) => {
+    return ["square", "horizontals"].includes(blockType);
+};
+
+const isHalfWidthBlock = (blockType) => {
+    return ["vertical", "double"].includes(blockType);
+};
+
+const isOneItemBlock = (blockType) => {
+    return ["square", "vertical"].includes(blockType);
+};
+
+const isTwoItemBlock = (blockType) => {
+    return ["horizontals", "double"].includes(blockType);
+};
+
+const evaluateSpaceTaken = (line) => {
+    return line.reduce((accumulator, blockType) => {
+        if (isFullWidthBlock(blockType)) {
+            return (accumulator = accumulator + 2);
+        } else if (isHalfWidthBlock(blockType)) {
+            return (accumulator = accumulator + 1);
         }
-    }
-
-    return results;
-}
-
-function eitherOr(firstStatement, secondStatement) {
-    if (Math.random() < 0.5) {
-        return firstStatement;
-    } else {
-        return secondStatement;
-    }
-}
+    }, 0);
+};
 
 function joinVertically(dividedBlockType, randomLine, randomBlockEntries) {
     if (randomBlockEntries.length <= 0) {
@@ -34,7 +51,11 @@ function joinVertically(dividedBlockType, randomLine, randomBlockEntries) {
 
     let indexOfPickedBlock = getRandomElementOf(randomBlockEntries);
 
-    randomLine.splice(indexOfPickedBlock, 1, dividedBlockType === "horizontals" ? "square" : "vertical");
+    randomLine.splice(
+        indexOfPickedBlock,
+        1,
+        dividedBlockType === "horizontals" ? "square" : "vertical"
+    );
 
     return [randomLine, 1];
 }
@@ -62,20 +83,6 @@ function joinHorizontally(halfWidthBlockType, randomLine, randomBlockEntries) {
     randomLine.splice(secondPick, 1);
 
     return [randomLine, spaceTaken];
-}
-
-function evaluateSpaceTaken(line) {
-    let spaceTaken = 0;
-
-    line.forEach((blockType) => {
-        if (["square", "horizontals"].includes(blockType)) {
-            spaceTaken = spaceTaken + 2;
-        } else if (["vertical", "double"].includes(blockType)) {
-            spaceTaken = spaceTaken + 1;
-        }
-    });
-
-    return spaceTaken;
 }
 
 function stretchBlocksFullWidth(columns, line) {
@@ -112,7 +119,11 @@ function eliminateLeftover(leftover, lines) {
     while (leftover > 0) {
         let randomLineIndex = getRandomNumber(0, lines.length);
         let randomLine = [...lines[randomLineIndex]];
-        let randomBlock = getRandomElementOf(["horizontals", "double", "vertical"]);
+        let randomBlock = getRandomElementOf([
+            "horizontals",
+            "double",
+            "vertical",
+        ]);
         let randomBlockEntries = getIndexesOf(randomBlock, randomLine);
         let joinMethod;
 
@@ -121,10 +132,17 @@ function eliminateLeftover(leftover, lines) {
         } else if (randomBlock === "vertical") {
             joinMethod = joinHorizontally;
         } else if (randomBlock === "double") {
-            joinMethod = leftover > 1 ? eitherOr(joinVertically, joinHorizontally) : joinVertically;
+            joinMethod =
+                leftover > 1
+                    ? eitherOr(joinVertically, joinHorizontally)
+                    : joinVertically;
         }
 
-        let joinMethodOutput = joinMethod(randomBlock, randomLine, randomBlockEntries);
+        let joinMethodOutput = joinMethod(
+            randomBlock,
+            randomLine,
+            randomBlockEntries
+        );
 
         if (joinMethodOutput !== false) {
             let [newLine, leftoverToDelete] = joinMethodOutput;
@@ -166,18 +184,19 @@ function generateGridMap(columns, totalItems) {
             }
 
             if (freeSpaceOfLine < 2) {
-                selectedBlockType = selectedBlockType === "square" ? "vertical" : "double";
+                selectedBlockType =
+                    selectedBlockType === "square" ? "vertical" : "double";
             }
 
-            if (["horizontals", "double"].includes(selectedBlockType)) {
+            if (isTwoItemBlock(selectedBlockType)) {
                 itemsAffected = 2;
-            } else if (["square", "vertical"].includes(selectedBlockType)) {
+            } else if (isOneItemBlock(selectedBlockType)) {
                 itemsAffected = 1;
             }
 
-            if (["square", "horizontals"].includes(selectedBlockType)) {
+            if (isFullWidthBlock(selectedBlockType)) {
                 spaceTaken = 2;
-            } else if (["vertical", "double"].includes(selectedBlockType)) {
+            } else if (isHalfWidthBlock(selectedBlockType)) {
                 spaceTaken = 1;
             }
 
@@ -213,7 +232,7 @@ function drawGrid(root, itemTemplate, columns, data) {
     let i = 0;
     let k = 0;
 
-    while (k < gridMap.length) {
+    while (gridMap.length > k) {
         let blockType = gridMap[k];
         let itemData = [data[i]];
         let step = 1;
@@ -312,7 +331,12 @@ document.querySelector("#columns").addEventListener("input", (e) => {
             return { id: i, title: `#${i + 1}` };
         });
 
-    drawGrid(document.querySelector("#app"), item, parseInt(e.target.value), data);
+    drawGrid(
+        document.querySelector("#app"),
+        item,
+        parseInt(e.target.value),
+        data
+    );
 });
 
 document.querySelector("#items").addEventListener("input", (e) => {
@@ -322,7 +346,12 @@ document.querySelector("#items").addEventListener("input", (e) => {
             return { id: i, title: `#${i + 1}` };
         });
 
-    drawGrid(document.querySelector("#app"), item, parseInt(document.querySelector("#columns").value), data);
+    drawGrid(
+        document.querySelector("#app"),
+        item,
+        parseInt(document.querySelector("#columns").value),
+        data
+    );
 });
 
 // Array(10000)
