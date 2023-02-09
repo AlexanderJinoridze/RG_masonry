@@ -1,6 +1,5 @@
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-size: 16px;
     line-height: 1.5;
     font-weight: 400;
 
@@ -27,10 +26,16 @@ a:hover {
 body {
     margin: 0;
     display: flex;
-    flex-flow: column;
+    gap: 16px;
+    flex-direction: column;
     place-items: center;
     min-width: 320px;
     min-height: 100vh;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
 }
 
 #app {
@@ -40,21 +45,31 @@ body {
     text-align: center;
     justify-content: flex-start;
     flex-flow: row wrap;
-
-    outline: 2px solid yellow;
-    outline-offset: -2px;
 }
 
 .item {
-    outline: 2px solid red;
-    outline-offset: -10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
     line-height: 1;
-    color: red;
     font-weight: bold;
+    color: #171717;
+
+    background: #e39b0c;
+    border: 2px solid #f2b640;
+    box-shadow: 0 0 8px black;
+    border-radius: 16px;
+
+    margin: 8px;
+    flex: 1;
+
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.item:hover {
+    background: #fbb621;
 }
 
 .square,
@@ -63,33 +78,37 @@ body {
 .vertical {
     display: flex;
     flex-direction: column;
-
-    outline: 2px solid blue;
-    outline-offset: -6px;
 }
 
 .square,
 .horizontals {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
 }
 
 .double,
 .vertical {
-    width: 100px;
-    height: 200px;
+    width: 150px;
+    height: 300px;
 }
 
-.square .item,
-.vertical .item {
-    width: 100%;
-    height: 100%;
+button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
 }
-
-.horizontals .item,
-.double .item {
-    width: 100%;
-    height: 50%;
+button:hover {
+    border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

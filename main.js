@@ -248,7 +248,7 @@ function drawGrid(root, itemTemplate, columns, data) {
         i = i + step;
     }
 
-    root.style = `width:${columns * 100}px`;
+    root.style = `width:${columns * 150}px`;
     root.innerHTML = result;
 }
 
