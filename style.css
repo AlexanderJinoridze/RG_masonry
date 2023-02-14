@@ -14,6 +14,11 @@
     -webkit-text-size-adjust: 100%;
 }
 
+:focus,
+:focus-visible {
+    outline: none;
+}
+
 a {
     font-weight: 500;
     color: #646cff;
@@ -38,6 +43,12 @@ h1 {
     line-height: 1.1;
 }
 
+#root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #app {
     max-width: 100%;
     margin: 32px;
@@ -47,17 +58,79 @@ h1 {
     flex-flow: row wrap;
 }
 
+.control {
+    display: flex;
+    max-width: 734px;
+    gap: 16px;
+}
+
+.fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btnset {
+    display: flex;
+    gap: 8px;
+}
+
+.input {
+    padding: 0 0 0 1rem;
+    margin: 0;
+    border-radius: 8px;
+    line-height: 50px;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 1px solid transparent;
+}
+
+.input:hover {
+    border-color: #f7df1e;
+}
+
+.input:focus,
+.input:focus-visible {
+    border-color: #f7df1e;
+    box-shadow: 0 0 0 3px rgba(247, 222, 30, 0.33);
+}
+
+.btn {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    line-height: 1;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+.btn:hover {
+    border-color: #f7df1e;
+}
+
+.btn:focus,
+.btn:focus-visible {
+    border-color: #f7df1e;
+    box-shadow: 0 0 0 3px rgba(247, 222, 30, 0.33);
+}
+
 .item {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 1rem;
     font-size: 1.5rem;
     line-height: 1;
     font-weight: bold;
     color: #171717;
 
-    background: #e39b0c;
-    border: 2px solid #f2b640;
+    background: #f7df1e;
+    border: 2px solid #ffed63;
     box-shadow: 0 0 8px black;
     border-radius: 16px;
 
@@ -69,7 +142,7 @@ h1 {
 }
 
 .item:hover {
-    background: #fbb621;
+    background: #ffe93e;
 }
 
 .square,
@@ -90,25 +163,6 @@ h1 {
 .vertical {
     width: 150px;
     height: 300px;
-}
-
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-button:hover {
-    border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

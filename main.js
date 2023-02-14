@@ -226,6 +226,34 @@ function generateGridMap(columns, totalItems) {
     return resultMap;
 }
 
+//
+//
+//
+//--------------------------------------------------
+//
+//
+//
+
+function itemTemplate(data) {
+    return `
+        <div id="${data.id}" class="item">${data.title}</div>
+    `;
+}
+
+function blockTemplate(type, itemData, item) {
+    let content = "";
+
+    itemData.map((data) => {
+        content += item(data);
+    });
+
+    return `
+        <div class="${type}">
+            ${content}
+        </div>
+    `;
+}
+
 function drawGrid(root, itemTemplate, columns, data) {
     let gridMap = generateGridMap(columns, data.length);
     let result = "";
@@ -242,7 +270,7 @@ function drawGrid(root, itemTemplate, columns, data) {
             step = 2;
         }
 
-        result += block(blockType, itemData, itemTemplate);
+        result += blockTemplate(blockType, itemData, itemTemplate);
 
         k = k + 1;
         i = i + step;
@@ -252,111 +280,54 @@ function drawGrid(root, itemTemplate, columns, data) {
     root.innerHTML = result;
 }
 
-//
-//
-//
-//--------------------------------------------------
-//
-//
-//
-
-function item(data) {
-    return `
-        <div id="${data.id}" class="item">${data.title}</div>
-    `;
+function generateData(dataLength) {
+    return Array(dataLength)
+        .fill("")
+        .map((_, i) => {
+            return { id: i, title: `#${i + 1}` };
+        });
 }
 
-function block(type, itemData, item) {
-    let content = "";
+let columnsVal = 5;
+let itemsLength = 80;
 
-    itemData.map((data) => {
-        content += item(data);
-    });
+const gridRoot = document.querySelector("#app");
+let data = generateData(itemsLength);
 
-    return `
-        <div class="${type}">
-            ${content}
-        </div>
-    `;
-}
+document.querySelector("#data-length").value = itemsLength;
+document.querySelector("#columns").value = columnsVal;
 
-let data = Array(20)
-    .fill("")
-    .map((_, i) => {
-        return { id: i, title: `#${i + 1}` };
-    });
+drawGrid(gridRoot, itemTemplate, columnsVal, data);
 
-drawGrid(document.querySelector("#app"), item, 5, data);
-
-document.querySelector("#clmn_5").addEventListener("click", () => {
-    let data = Array(parseInt(document.querySelector("#items").value))
-        .fill("")
-        .map((_, i) => {
-            return { id: i, title: `#${i + 1}` };
-        });
-    drawGrid(document.querySelector("#app"), item, 5, data);
+document.querySelector("#clmns_5").addEventListener("click", () => {
+    drawGrid(gridRoot, itemTemplate, 5, data);
 });
 
-document.querySelector("#clmn_4").addEventListener("click", () => {
-    let data = Array(parseInt(document.querySelector("#items").value))
-        .fill("")
-        .map((_, i) => {
-            return { id: i, title: `#${i + 1}` };
-        });
-    drawGrid(document.querySelector("#app"), item, 4, data);
+document.querySelector("#clmns_4").addEventListener("click", () => {
+    drawGrid(gridRoot, itemTemplate, 4, data);
 });
 
-document.querySelector("#clmn_3").addEventListener("click", () => {
-    let data = Array(parseInt(document.querySelector("#items").value))
-        .fill("")
-        .map((_, i) => {
-            return { id: i, title: `#${i + 1}` };
-        });
-    drawGrid(document.querySelector("#app"), item, 3, data);
+document.querySelector("#clmns_3").addEventListener("click", () => {
+    drawGrid(gridRoot, itemTemplate, 3, data);
 });
 
-document.querySelector("#clmn_2").addEventListener("click", () => {
-    let data = Array(parseInt(document.querySelector("#items").value))
-        .fill("")
-        .map((_, i) => {
-            return { id: i, title: `#${i + 1}` };
-        });
-    drawGrid(document.querySelector("#app"), item, 2, data);
+document.querySelector("#clmns_2").addEventListener("click", () => {
+    drawGrid(gridRoot, itemTemplate, 2, data);
+});
+
+document.querySelector("#clmns_1").addEventListener("click", () => {
+    drawGrid(gridRoot, itemTemplate, 1, data);
 });
 
 document.querySelector("#columns").addEventListener("input", (e) => {
-    let data = Array(parseInt(document.querySelector("#items").value))
-        .fill("")
-        .map((_, i) => {
-            return { id: i, title: `#${i + 1}` };
-        });
+    columnsVal = parseInt(e.target.value);
 
-    drawGrid(
-        document.querySelector("#app"),
-        item,
-        parseInt(e.target.value),
-        data
-    );
+    drawGrid(gridRoot, itemTemplate, columnsVal, data);
 });
 
-document.querySelector("#items").addEventListener("input", (e) => {
-    let data = Array(parseInt(e.target.value))
-        .fill("")
-        .map((_, i) => {
-            return { id: i, title: `#${i + 1}` };
-        });
+document.querySelector("#data-length").addEventListener("input", (e) => {
+    data = generateData(parseInt(e.target.value));
+    itemsLength = data.length;
 
-    drawGrid(
-        document.querySelector("#app"),
-        item,
-        parseInt(document.querySelector("#columns").value),
-        data
-    );
+    drawGrid(gridRoot, itemTemplate, columnsVal, data);
 });
-
-// Array(10000)
-//     .fill("")
-//     .forEach((_, i) => {
-//         // console.log(i);
-//         document.querySelector("#clmn_5").click();
-//     });
